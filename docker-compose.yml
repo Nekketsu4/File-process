@@ -1,0 +1,37 @@
+services:
+  app:
+    build: .
+    command: python /files/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/files
+    ports:
+      - "8000:8000"
+
+  redis:
+    image: redis:7.2.1-alpine
+    hostname: redis
+    ports:
+      - "6379:6379"
+
+
+  worker:
+    build: .
+    hostname: worker
+    command: celery -A files worker -l INFO
+    volumes:
+      - .:/files
+    depends_on:
+      - app
+      - redis
+
+  flower:
+    build: .
+    hostname: flower
+    command: celery -A files flower
+    volumes:
+      - .:/files
+    depends_on:
+      - app
+      - redis
+    ports:
+      - "5555:5555"
