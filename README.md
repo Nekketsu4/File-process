@@ -38,8 +38,10 @@ pip install -r req.txt
 python3 manage.py makemigrations
 python3 manage.py migrate
 
-#Run the server
-python3 manage.py runserver
+#build docker-compose and run it
+docker-compose build
+docker-compose run
+
 ```
 
 
